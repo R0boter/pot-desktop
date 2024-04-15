@@ -54,13 +54,13 @@ void listen('tauri://focus', () => {
     }
 });
 // 监听 move 事件取消 blurTimeout 时间之内的关闭窗口
-void listen('tauri://move', () => {
-    info('Move');
-    if (blurTimeout) {
-        info('Cancel Close');
-        clearTimeout(blurTimeout);
-    }
-});
+// void listen('tauri://move', () => {
+//     info('Move');
+//     if (blurTimeout) {
+//         info('Cancel Close');
+//         clearTimeout(blurTimeout);
+//     }
+// });
 
 export default function Translate() {
     const [closeOnBlur] = useConfig('translate_close_on_blur', true);
