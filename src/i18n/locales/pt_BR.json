@@ -39,7 +39,8 @@
             "nl": "Holandês",
             "sv": "Sueco",
             "pl": "Polonês",
-            "uk": "Ucraniano"
+            "uk": "Ucraniano",
+            "he": "Hebreu"
         },
         "config": {
             "general": {
@@ -49,7 +50,7 @@
                 "check_update": "Checar por Atualização",
                 "server_port": "Porta de Escuta",
                 "server_port_change": "A porta de escuta foi alterada. Reinicie o aplicativo para que as alterações tenham efeito",
-                "app_language": "Idioma do Aplicativo",
+                "app_language": "Idioma de Exibição",
                 "app_theme": "Tema",
                 "font_size": {
                     "14": "Pequena (14px)",
@@ -87,7 +88,8 @@
                 },
                 "default_font": "Padrão",
                 "app_font": "Fonte",
-                "app_fallback_font": "Fonte Reserva"
+                "app_fallback_font": "Fonte Reserva",
+                "dev_mode": "Modo de Desenvolvedor"
             },
             "translate": {
                 "label": "Traduzir",
@@ -109,7 +111,7 @@
                 "mouse": "Seguir o mouse",
                 "pre_state": "Lembrar posição",
                 "remember_window_size": "Lembrar do Tamanho da Janela",
-                "close_on_blur": "Fechar no Desfoque",
+                "close_on_blur": "Fechar janela quando o foco for perdido",
                 "always_on_top": "Sempre na Frente",
                 "hide_source": "Ocultar Área de Origem",
                 "hide_language": "Ocultar Área do Idioma",
@@ -140,13 +142,13 @@
                 "delete_newline": "Excluir Nova Linha Automaticamente",
                 "auto_copy": "Copiar Automaticamente",
                 "hide_window": "Ocultar Janela de Reconhecimento",
-                "close_on_blur": "Fechar no Desfoque"
+                "close_on_blur": "Fechar janela quando o foco for perdido"
             },
             "hotkey": {
                 "label": "Atalho",
                 "title": "Configurações de Atalhos",
                 "selection_translate": "Traduzir Selecionado",
-                "input_translate": "Tradução de Entrada",
+                "input_translate": "Tradução do Texto",
                 "ocr_recognize": "Reconhecimento de Texto",
                 "ocr_translate": "Tradução de Imagem",
                 "is_register": "O atalho já está registrado",
@@ -181,7 +183,7 @@
                 "webdav": "WebDav",
                 "local": "Local",
                 "webdav_url": "URL do WebDav",
-                "username": "Nome de Usuário",
+                "username": "Nome de usuário",
                 "password": "Senha",
                 "backup": "Backup",
                 "restore": "Restaurar",
@@ -225,6 +227,7 @@
         "services": {
             "help": "Guia de Configuração",
             "no_need": "Nenhuma Configuração Requerida",
+            "instance_name": "Nome da configuração",
             "translate": {
                 "deepl": {
                     "title": "DeepL",
@@ -238,6 +241,9 @@
                 "google": {
                     "title": "Google",
                     "custom_url": "URL personalizada"
+                },
+                "lingva": {
+                    "title": "Lingva"
                 },
                 "bing": {
                     "title": "Bing"
@@ -259,7 +265,7 @@
                 },
                 "transmart": {
                     "title": "TranSmart",
-                    "username": "Nome de Usuário",
+                    "username": "Nome de usuário",
                     "token": "Token"
                 },
                 "baidu": {
@@ -327,27 +333,6 @@
                     "prompt_description": "Ao personalizar o Prompt, você pode personalizar o comportamento da IA. $text $from $to $detect será substituído pelo texto a ser traduzido, o idioma de origem, o idioma de destino e o idioma detectado.",
                     "chatglm_turbo": "ChatGLM Turbo"
                 },
-                "chatglm_custom": {
-                    "title": "ChatGLM Costume"
-                },
-                "chatglm_polish": {
-                    "title": "ChatGLM Polonês"
-                },
-                "chatglm_summary": {
-                    "title": "ChatGLM Resumo"
-                },
-                "openai_custom": {
-                    "title": "OpenAI Customização"
-                },
-                "openai_polish": {
-                    "title": "OpenAI Retoque"
-                },
-                "openai_summary": {
-                    "title": "OpenAI Resumo"
-                },
-                "geminipro_polish": {
-                    "title": "Gemini Pro Polônes"
-                },
                 "geminipro": {
                     "add": "Adicionar Prompt",
                     "api_key": "Chave Api",
@@ -355,12 +340,6 @@
                     "prompt_description": "Ao personalizar o Prompt, você pode personalizar o comportamento do Gemini Pro. $text $from $to $detect será substituído pelo texto a ser traduzido, idioma de origem, idioma de destino e idioma detectado.",
                     "title": "Gemini Pro",
                     "request_path": "Caminho de Solicitação"
-                },
-                "geminipro_custom": {
-                    "title": "Gemini Pro Personalizado"
-                },
-                "geminipro_summary": {
-                    "title": "Resumo do Gemini Pro"
                 },
                 "ollama": {
                     "install_ollama": "Não foi possível conectar-se ao ollama local. Baixe, instale e inicie o ollama primeiro. Se você usar ollama que não está nesta máquina, altere o endereço da solicitação.",
@@ -376,14 +355,8 @@
                     "not_installed": "Este modelo ainda não foi instalado, clique para baixar e instalar agora",
                     "prompt_description": "Ao personalizar o Prompt, você pode personalizar o comportamento da IA. $text $from $to $detect será substituído pelo texto a ser traduzido, idioma de origem, idioma de destino e idioma detectado."
                 },
-                "ollama_polish": {
-                    "title": "Ollama Polonês"
-                },
-                "ollama_custom": {
-                    "title": "Ollama Personalizado"
-                },
-                "ollama_summary": {
-                    "title": "Resumo do Ollama"
+                "ecdict": {
+                    "title": "ECDict(Online)"
                 }
             },
             "recognize": {

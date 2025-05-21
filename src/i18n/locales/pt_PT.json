@@ -7,9 +7,12 @@
             "write_clipboard": "Escrever na Área de Transferência",
             "save": "Gravar",
             "clear": "Claro",
-            "coming": "Em breve…"
+            "coming": "Brevemente…"
         },
         "services": {
+            "help": "Guia de Configuração",
+            "no_need": "Nenhuma Configuração Requerida",
+            "instance_name": "Nome da configuração",
             "translate": {
                 "youdao": {
                     "appkey": "ID do App",
@@ -73,9 +76,6 @@
                 "cambridge_dict": {
                     "title": "Cambridge Dicionário"
                 },
-                "openai_custom": {
-                    "title": "OpenAI Customização"
-                },
                 "baidu": {
                     "appid": "ID do App",
                     "title": "Baidu",
@@ -106,29 +106,14 @@
                 "bing_dict": {
                     "title": "Bing Dicionário"
                 },
-                "chatglm_custom": {
-                    "title": "ChatGLM Hábito"
-                },
-                "chatglm_polish": {
-                    "title": "ChatGLM Polonês"
-                },
-                "chatglm_summary": {
-                    "title": "ChatGLM Resumo"
-                },
-                "openai_polish": {
-                    "title": "OpenAI Retoque"
+                "lingva": {
+                    "title": "Lingva"
                 },
                 "bing": {
                     "title": "Bing"
                 },
-                "openai_summary": {
-                    "title": "OpenAI Resumo"
-                },
                 "alibaba": {
                     "title": "Alibaba"
-                },
-                "geminipro_summary": {
-                    "title": "Resumo do Gemini Pro"
                 },
                 "geminipro": {
                     "api_key": "Chave de Api",
@@ -219,8 +204,6 @@
                     "title": "Eudic"
                 }
             },
-            "help": "Guia de Configuração",
-            "no_need": "Nenhuma Configuração Requerida",
             "tts": {
                 "lingva_tts": {
                     "title": "Lingva",

@@ -13,12 +13,15 @@ import { HiTranslate } from 'react-icons/hi';
 import { LuDelete } from 'react-icons/lu';
 import { invoke } from '@tauri-apps/api';
 import { atom, useAtom } from 'jotai';
-
+import { getServiceName, getServiceSouceType, ServiceSourceType } from '../../../../utils/service_instance';
 import { useConfig, useSyncAtom, useVoice, useToastStyle } from '../../../../hooks';
+import { invoke_plugin } from '../../../../utils/invoke_plugin';
 import * as recognizeServices from '../../../../services/recognize';
 import * as builtinTtsServices from '../../../../services/tts';
 import detect from '../../../../utils/lang_detect';
 import { store } from '../../../../utils/store';
+import { info } from 'tauri-plugin-log-api';
+import { debug } from 'tauri-plugin-log-api';
 
 export const sourceTextAtom = atom('');
 export const detectLanguageAtom = atom('');
@@ -27,7 +30,7 @@ let unlisten = null;
 let timer = null;
 
 export default function SourceArea(props) {
-    const { pluginList } = props;
+    const { pluginList, serviceInstanceConfigMap } = props;
     const [appFontSize] = useConfig('app_font_size', 16);
     const [sourceText, setSourceText, syncSourceText] = useSyncAtom(sourceTextAtom);
     const [detectLanguage, setDetectLanguage] = useAtom(detectLanguageAtom);
@@ -64,17 +67,20 @@ export default function SourceArea(props) {
         } else if (text === '[IMAGE_TRANSLATE]') {
             setWindowType('[IMAGE_TRANSLATE]');
             const base64 = await invoke('get_base64');
-            const serviceName = recognizeServiceList[0];
-            if (serviceName.startsWith('[plugin]')) {
-                if (recognizeLanguage in pluginList['recognize'][serviceName].language) {
-                    const pluginConfig = (await store.get(serviceName)) ?? {};
-                    invoke('invoke_plugin', {
-                        name: serviceName,
-                        pluginType: 'recognize',
-                        source: base64,
-                        lang: pluginList['recognize'][serviceName].language[recognizeLanguage],
-                        needs: pluginConfig,
-                    }).then(
+            const serviceInstanceKey = recognizeServiceList[0];
+            if (getServiceSouceType(serviceInstanceKey) === ServiceSourceType.PLUGIN) {
+                if (recognizeLanguage in pluginList['recognize'][getServiceName(serviceInstanceKey)].language) {
+                    const pluginConfig = serviceInstanceConfigMap[serviceInstanceKey];
+
+                    let [func, utils] = await invoke_plugin('recognize', getServiceName(serviceInstanceKey));
+                    func(
+                        base64,
+                        pluginList['recognize'][getServiceName(serviceInstanceKey)].language[recognizeLanguage],
+                        {
+                            config: pluginConfig,
+                            utils,
+                        }
+                    ).then(
                         (v) => {
                             let newText = v.trim();
                             if (deleteNewline) {
@@ -101,9 +107,16 @@ export default function SourceArea(props) {
                     setSourceText('Language not supported');
                 }
             } else {
-                if (recognizeLanguage in recognizeServices[serviceName].Language) {
-                    recognizeServices[serviceName]
-                        .recognize(base64, recognizeServices[serviceName].Language[recognizeLanguage])
+                if (recognizeLanguage in recognizeServices[getServiceName(serviceInstanceKey)].Language) {
+                    const instanceConfig = serviceInstanceConfigMap[serviceInstanceKey];
+                    recognizeServices[getServiceName(serviceInstanceKey)]
+                        .recognize(
+                            base64,
+                            recognizeServices[getServiceName(serviceInstanceKey)].Language[recognizeLanguage],
+                            {
+                                config: instanceConfig,
+                            }
+                        )
                         .then(
                             (v) => {
                                 let newText = v.trim();
@@ -165,32 +178,34 @@ export default function SourceArea(props) {
     };
 
     const handleSpeak = async () => {
-        const serviceName = ttsServiceList[0];
+        const instanceKey = ttsServiceList[0];
         let detected = detectLanguage;
         if (detected === '') {
             detected = await detect(sourceText);
             setDetectLanguage(detected);
         }
-        if (serviceName.startsWith('[plugin]')) {
+        if (getServiceSouceType(instanceKey) === ServiceSourceType.PLUGIN) {
             if (!(detected in ttsPluginInfo.language)) {
                 throw new Error('Language not supported');
             }
-            const config = (await store.get(serviceName)) ?? {};
-            const data = await invoke('invoke_plugin', {
-                name: serviceName,
-                pluginType: 'tts',
-                source: sourceText,
-                lang: ttsPluginInfo.language[detected],
-                needs: config,
+            const pluginConfig = serviceInstanceConfigMap[instanceKey];
+            let [func, utils] = await invoke_plugin('tts', getServiceName(instanceKey));
+            let data = await func(sourceText, ttsPluginInfo.language[detected], {
+                config: pluginConfig,
+                utils,
             });
             speak(data);
         } else {
-            if (!(detected in builtinTtsServices[serviceName].Language)) {
+            if (!(detected in builtinTtsServices[getServiceName(instanceKey)].Language)) {
                 throw new Error('Language not supported');
             }
-            let data = await builtinTtsServices[serviceName].tts(
+            const instanceConfig = serviceInstanceConfigMap[instanceKey];
+            let data = await builtinTtsServices[getServiceName(instanceKey)].tts(
                 sourceText,
-                builtinTtsServices[serviceName].Language[detected]
+                builtinTtsServices[getServiceName(instanceKey)].Language[detected],
+                {
+                    config: instanceConfig,
+                }
             );
             speak(data);
         }
@@ -211,8 +226,8 @@ export default function SourceArea(props) {
     }, [hideWindow]);
 
     useEffect(() => {
-        if (ttsServiceList && ttsServiceList[0].startsWith('[plugin]')) {
-            readTextFile(`plugins/tts/${ttsServiceList[0]}/info.json`, {
+        if (ttsServiceList && getServiceSouceType(ttsServiceList[0]) === ServiceSourceType.PLUGIN) {
+            readTextFile(`plugins/tts/${getServiceName(ttsServiceList[0])}/info.json`, {
                 dir: BaseDirectory.AppConfig,
             }).then((infoStr) => {
                 setTtsPluginInfo(JSON.parse(infoStr));
@@ -243,6 +258,111 @@ export default function SourceArea(props) {
         setDetectLanguage(await detect(text));
     };
 
+    let sourceTextChangeTimer = null;
+    const changeSourceText = async (text) => {
+        setDetectLanguage('');
+        await setSourceText(text);
+        if (dynamicTranslate) {
+            if (sourceTextChangeTimer) {
+                clearTimeout(sourceTextChangeTimer);
+            }
+            sourceTextChangeTimer = setTimeout(() => {
+                detect_language(text).then(() => {
+                    syncSourceText();
+                });
+            }, 1000);
+        }
+    }
+
+    const transformVarName = function (str) {
+        let str2 = str;
+
+        // snake_case to SNAKE_CASE
+        if (/_[a-z]/.test(str2)) {
+            str2 = str2.split('_').map(it => it.toLocaleUpperCase()).join('_');
+        }
+        if (str2 !== str) {
+            return str2;
+        }
+
+        // SNAKE_CASE to kebab-case
+        if (/^[A-Z]+(_[A-Z]+)*$/.test(str2)) {
+            str2 = str2.split('_').map(it => it.toLocaleLowerCase()).join('-');
+        }
+        if (str2 !== str) {
+            return str2;
+        }
+
+        // kebab-case to dot.notation
+        if (/-/.test(str2)) {
+            str2 = str2.split('-').map(it => it.toLocaleLowerCase()).join('.');
+        }
+        if (str2 !== str) {
+            return str2;
+        }
+
+        // dot.notation to space separated
+        if (/\.[a-z]/.test(str2)) {
+            str2 = str2.replaceAll(/(\.)([a-z])/g, (_, _2, it) => ' ' + it);
+        }
+        if (str2 !== str) {
+            return str2;
+        }
+
+        // space separated to Title Case
+        if (/\s[a-z]/.test(str2)) {
+            str2 = str2.replaceAll(/\s([a-z])/g, (_, it) => ' ' + it.toLocaleUpperCase());
+            str2 = str2.substring(0, 1).toLocaleUpperCase() + str2.substring(1);
+        }
+        if (str2 !== str) {
+            return str2;
+        }
+
+        // Title Case to CamelCase
+        if (/\s[A-Z]/.test(str2)) {
+            str2 = str2.replaceAll(/\s([A-Z])/g, (_, it) => it);
+            str2 = str2.substring(0, 1).toLocaleLowerCase() + str2.substring(1);
+        }
+        if (str2 !== str) {
+            return str2;
+        }
+
+        // CamelCase to PascalCase
+        if (/^[a-z]+[A-Z]+/.test(str2)) {
+            str2 = str2.substring(0, 1).toLocaleUpperCase() + str2.substring(1);
+        }
+        if (str2 !== str) {
+            return str2;
+        }
+
+        // PascalCase to snake_case
+        if (/[^\s][A-Z]/.test(str2)) {
+            str2 = str2.replaceAll(/[A-Z]/g, (it, offset) => {
+                return (offset == 0 ? '' : '_') + it.toLocaleLowerCase();
+            });
+        }
+
+        return str2;
+    }
+    useEffect(() => {
+        textAreaRef.current.addEventListener("keydown", async (event) => {
+            if (event.altKey && event.shiftKey && event.code === 'KeyU') {
+                const originText = textAreaRef.current.value;
+                const selectionStart = textAreaRef.current.selectionStart;
+                const selectionEnd = textAreaRef.current.selectionEnd;
+                const selectionText = originText.substring(selectionStart, selectionEnd);
+
+                const convertedText = transformVarName(selectionText);
+                const targetText = originText.substring(0, selectionStart) + convertedText + originText.substring(selectionEnd);
+
+                await changeSourceText(targetText);
+                textAreaRef.current.selectionStart = selectionStart;
+                textAreaRef.current.selectionEnd = selectionStart + convertedText.length;
+            }
+        });
+    }, [textAreaRef]);
+
+
     return (
         <div className={hideSource && windowType !== '[INPUT_TRANSLATE]' && 'hidden'}>
             <Card
@@ -259,18 +379,7 @@ export default function SourceArea(props) {
                         onKeyDown={keyDown}
                         onChange={(e) => {
                             const v = e.target.value;
-                            setDetectLanguage('');
-                            setSourceText(v);
-                            if (dynamicTranslate) {
-                                if (timer) {
-                                    clearTimeout(timer);
-                                }
-                                timer = setTimeout(() => {
-                                    detect_language(v).then(() => {
-                                        syncSourceText();
-                                    });
-                                }, 1000);
-                            }
+                            changeSourceText(v);
                         }}
                     />
                 </CardBody>

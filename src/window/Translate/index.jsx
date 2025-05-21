@@ -16,6 +16,7 @@ import { osType } from '../../utils/env';
 import { useConfig } from '../../hooks';
 import { store } from '../../utils/store';
 import { info } from 'tauri-plugin-log-api';
+
 let blurTimeout = null;
 let resizeTimeout = null;
 let moveTimeout = null;
@@ -67,16 +68,21 @@ export default function Translate() {
     const [alwaysOnTop] = useConfig('translate_always_on_top', false);
     const [windowPosition] = useConfig('translate_window_position', 'mouse');
     const [rememberWindowSize] = useConfig('translate_remember_window_size', false);
-    const [translateServiceList, setTranslateServiceList] = useConfig('translate_service_list', [
+    const [translateServiceInstanceList, setTranslateServiceInstanceList] = useConfig('translate_service_list', [
         'deepl',
         'bing',
+        'lingva',
         'yandex',
         'google',
+        'ecdict',
     ]);
+    const [recognizeServiceInstanceList] = useConfig('recognize_service_list', ['system', 'tesseract']);
+    const [ttsServiceInstanceList] = useConfig('tts_service_list', ['lingva_tts']);
+    const [collectionServiceInstanceList] = useConfig('collection_service_list', []);
     const [hideLanguage] = useConfig('hide_language', false);
     const [pined, setPined] = useState(false);
     const [pluginList, setPluginList] = useState(null);
-    const [serviceConfig, setServiceConfig] = useState(null);
+    const [serviceInstanceConfigMap, setServiceInstanceConfigMap] = useState(null);
     const reorder = (list, startIndex, endIndex) => {
         const result = Array.from(list);
         const [removed] = result.splice(startIndex, 1);
@@ -86,8 +92,8 @@ export default function Translate() {
 
     const onDragEnd = async (result) => {
         if (!result.destination) return;
-        const items = reorder(translateServiceList, result.source.index, result.destination.index);
-        setTranslateServiceList(items);
+        const items = reorder(translateServiceInstanceList, result.source.index, result.destination.index);
+        setTranslateServiceInstanceList(items);
     };
     // 是否自动关闭窗口
     useEffect(() => {
@@ -190,18 +196,37 @@ export default function Translate() {
         }
     }, []);
 
-    const getServiceConfig = async () => {
-        let config = {};
-        for (const service of translateServiceList) {
-            config[service] = (await store.get(service)) ?? {};
+    const loadServiceInstanceConfigMap = async () => {
+        const config = {};
+        for (const serviceInstanceKey of translateServiceInstanceList) {
+            config[serviceInstanceKey] = (await store.get(serviceInstanceKey)) ?? {};
         }
-        setServiceConfig({ ...config });
+        for (const serviceInstanceKey of recognizeServiceInstanceList) {
+            config[serviceInstanceKey] = (await store.get(serviceInstanceKey)) ?? {};
+        }
+        for (const serviceInstanceKey of ttsServiceInstanceList) {
+            config[serviceInstanceKey] = (await store.get(serviceInstanceKey)) ?? {};
+        }
+        for (const serviceInstanceKey of collectionServiceInstanceList) {
+            config[serviceInstanceKey] = (await store.get(serviceInstanceKey)) ?? {};
+        }
+        setServiceInstanceConfigMap({ ...config });
     };
     useEffect(() => {
-        if (translateServiceList !== null) {
-            getServiceConfig();
+        if (
+            translateServiceInstanceList !== null &&
+            recognizeServiceInstanceList !== null &&
+            ttsServiceInstanceList !== null &&
+            collectionServiceInstanceList !== null
+        ) {
+            loadServiceInstanceConfigMap();
         }
-    }, [translateServiceList]);
+    }, [
+        translateServiceInstanceList,
+        recognizeServiceInstanceList,
+        ttsServiceInstanceList,
+        collectionServiceInstanceList,
+    ]);
 
     return (
         pluginList && (
@@ -252,7 +277,12 @@ export default function Translate() {
                 <div className={`${osType === 'Linux' ? 'h-[calc(100vh-37px)]' : 'h-[calc(100vh-35px)]'} px-[8px]`}>
                     <div className='h-full overflow-y-auto'>
                         <div>
-                            <SourceArea pluginList={pluginList} />
+                            {serviceInstanceConfigMap !== null && (
+                                <SourceArea
+                                    pluginList={pluginList}
+                                    serviceInstanceConfigMap={serviceInstanceConfigMap}
+                                />
+                            )}
                         </div>
                         <div className={`${hideLanguage && 'hidden'}`}>
                             <LanguageArea />
@@ -268,16 +298,16 @@ export default function Translate() {
                                         ref={provided.innerRef}
                                         {...provided.droppableProps}
                                     >
-                                        {translateServiceList !== null &&
-                                            serviceConfig !== null &&
-                                            translateServiceList.map((service, index) => {
-                                                const config = serviceConfig[service] ?? {};
+                                        {translateServiceInstanceList !== null &&
+                                            serviceInstanceConfigMap !== null &&
+                                            translateServiceInstanceList.map((serviceInstanceKey, index) => {
+                                                const config = serviceInstanceConfigMap[serviceInstanceKey] ?? {};
                                                 const enable = config['enable'] ?? true;
 
                                                 return enable ? (
                                                     <Draggable
-                                                        key={service}
-                                                        draggableId={service}
+                                                        key={serviceInstanceKey}
+                                                        draggableId={serviceInstanceKey}
                                                         index={index}
                                                     >
                                                         {(provided) => (
@@ -287,10 +317,13 @@ export default function Translate() {
                                                             >
                                                                 <TargetArea
                                                                     {...provided.dragHandleProps}
-                                                                    pluginList={pluginList}
-                                                                    name={service}
                                                                     index={index}
-                                                                    translateServiceList={translateServiceList}
+                                                                    name={serviceInstanceKey}
+                                                                    translateServiceInstanceList={
+                                                                        translateServiceInstanceList
+                                                                    }
+                                                                    pluginList={pluginList}
+                                                                    serviceInstanceConfigMap={serviceInstanceConfigMap}
                                                                 />
                                                                 <Spacer y={2} />
                                                             </div>

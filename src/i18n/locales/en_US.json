@@ -39,7 +39,8 @@
             "sv": "Swedish",
             "pl": "Polish",
             "nl": "Dutch",
-            "uk": "Ukrainian"
+            "uk": "Ukrainian",
+            "he": "Hebrew"
         },
         "config": {
             "general": {
@@ -49,7 +50,7 @@
                 "check_update": "Check Update",
                 "server_port": "Listening Port",
                 "server_port_change": "The listening port has been changed, Please restart the application for the changes to take effect",
-                "app_language": "Application Language",
+                "app_language": "Display Language",
                 "app_theme": "Theme",
                 "app_font": "Font",
                 "app_fallback_font": "Fallback Font",
@@ -70,11 +71,12 @@
                     "system": "System"
                 },
                 "transparent": "Transparent Effect",
+                "dev_mode": "Developer Mode",
                 "proxy": {
                     "title": "Proxy",
                     "host": "Host",
                     "port": "Port",
-                    "username": "User Name",
+                    "username": "Username",
                     "password": "Password",
                     "no_proxy": "No Proxy"
                 },
@@ -119,7 +121,7 @@
                 "mouse": "Follow the Mouse",
                 "pre_state": "Remember Position",
                 "remember_window_size": "Remember Window Size",
-                "close_on_blur": "Close on Blur",
+                "close_on_blur": "Close window when focus lost",
                 "always_on_top": "Always on Top",
                 "hide_source": "Hide Source Area",
                 "hide_language": "Hide Language Area",
@@ -139,14 +141,14 @@
                 "language": "Recognition Language",
                 "delete_newline": "Auto Delete Newline",
                 "auto_copy": "Auto Copy",
-                "close_on_blur": "Close on Blur",
+                "close_on_blur": "Close window when focus lost",
                 "hide_window": "Hide Recognition Window"
             },
             "hotkey": {
                 "label": "Hotkey",
                 "title": "Hotkey Settings",
                 "selection_translate": "Selection Translation",
-                "input_translate": "Input Translation",
+                "input_translate": "Text Translation",
                 "ocr_recognize": "Text Recognition",
                 "ocr_translate": "Screenshot Translation",
                 "is_register": "The hotkey is already registered",
@@ -181,8 +183,8 @@
                 "webdav": "WebDav",
                 "aliyun": "Aliyun Drive",
                 "local": "Local",
-                "webdav_url": "WebDav Url",
-                "username": "User Name",
+                "webdav_url": "WebDav URL",
+                "username": "Username",
                 "password": "Password",
                 "logout": "Logout",
                 "aliyun_login_first": "Please scan the code to log in first.",
@@ -225,6 +227,7 @@
         "services": {
             "help": "Configuration Guide",
             "no_need": "No configuration required",
+            "instance_name": "Configuration Name",
             "translate": {
                 "deepl": {
                     "title": "DeepL",
@@ -238,6 +241,9 @@
                 "google": {
                     "title": "Google",
                     "custom_url": "Custom URL"
+                },
+                "lingva": {
+                    "title": "Lingva"
                 },
                 "bing": {
                     "title": "Bing"
@@ -256,15 +262,6 @@
                     "prompt_description": "By customizing the Prompt, you can customize the behavior of AI. $text $from $to $detect will be replaced with the text to be translated, source language, target language and detected language.",
                     "add": "Add Prompt"
                 },
-                "ollama_polish": {
-                    "title": "Ollama Polish"
-                },
-                "ollama_summary": {
-                    "title": "Ollama Summary"
-                },
-                "ollama_custom": {
-                    "title": "Ollama Custom"
-                },
                 "openai": {
                     "title": "OpenAI",
                     "service": "Service Provider",
@@ -277,15 +274,6 @@
                     "prompt_description": "By customizing the Prompt, you can customize the behavior of OpenAI. $text $from $to $detect will be replaced with the text to be translated, source language, target language and detected language.",
                     "add": "Add Prompt"
                 },
-                "openai_summary": {
-                    "title": "OpenAI Summary"
-                },
-                "openai_polish": {
-                    "title": "OpenAI Polish"
-                },
-                "openai_custom": {
-                    "title": "OpenAI Custom"
-                },
                 "geminipro": {
                     "title": "Gemini Pro",
                     "request_path": "Request Path",
@@ -293,15 +281,6 @@
                     "stream": "Stream Mode",
                     "prompt_description": "By customizing the Prompt, you can customize the behavior of Gemini Pro. $text $from $to $detect will be replaced with the text to be translated, source language, target language and detected language.",
                     "add": "Add Prompt"
-                },
-                "geminipro_summary": {
-                    "title": "Gemini Pro Summary"
-                },
-                "geminipro_polish": {
-                    "title": "Gemini Pro Polish"
-                },
-                "geminipro_custom": {
-                    "title": "Gemini Pro Custom"
                 },
                 "chatglm": {
                     "title": "ChatGLM",
@@ -314,21 +293,15 @@
                     "prompt_description": "By customizing the Prompt, you can customize the behavior of AI. $text $from $to $detect will be replaced with the text to be translated, source language, target language and detected language.",
                     "add": "Add Prompt"
                 },
-                "chatglm_summary": {
-                    "title": "ChatGLM Summary"
-                },
-                "chatglm_polish": {
-                    "title": "ChatGLM Polish"
-                },
-                "chatglm_custom": {
-                    "title": "ChatGLM Custom"
-                },
                 "yandex": {
                     "title": "Yandex"
                 },
+                "ecdict": {
+                    "title": "ECDict(Online)"
+                },
                 "transmart": {
                     "title": "TranSmart",
-                    "username": "User Name",
+                    "username": "Username",
                     "token": "Token"
                 },
                 "baidu": {

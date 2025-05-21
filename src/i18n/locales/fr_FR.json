@@ -1,6 +1,9 @@
 {
     "translation": {
         "services": {
+            "help": "Guide de configuration",
+            "no_need": "Aucune configuration requise",
+            "instance_name": "Nom de la configuration",
             "translate": {
                 "youdao": {
                     "appkey": "ID d'application",
@@ -70,9 +73,6 @@
                 "cambridge_dict": {
                     "title": "Dictionnaire Cambridge"
                 },
-                "openai_custom": {
-                    "title": "OpenAI personnalisé"
-                },
                 "baidu": {
                     "appid": "ID d'application",
                     "title": "Baidu",
@@ -103,23 +103,11 @@
                 "bing_dict": {
                     "title": "Dictionnaire Bing"
                 },
-                "chatglm_custom": {
-                    "title": "ChatGLM personnalisé"
-                },
-                "chatglm_summary": {
-                    "title": "Résumé de ChatGLM"
+                "lingva": {
+                    "title": "Lingva"
                 },
                 "bing": {
                     "title": "Bing"
-                },
-                "openai_summary": {
-                    "title": "Résumé d'OpenAI"
-                },
-                "chatglm_polish": {
-                    "title": "ChatGLM Retouche"
-                },
-                "openai_polish": {
-                    "title": "OpenAI Retouche"
                 },
                 "geminipro": {
                     "add": "Ajouter un prompt",
@@ -128,15 +116,6 @@
                     "title": "Gemini Pro",
                     "prompt_description": "En personnalisant le prompt, vous pouvez personnaliser le comportement de Gemini Pro. $text $from $to $detect sera remplacé par le texte à traduire, la langue source, la langue cible et la langue détectée.",
                     "request_path": "Chemin de la demande"
-                },
-                "geminipro_summary": {
-                    "title": "Résumé Gemini Pro"
-                },
-                "geminipro_polish": {
-                    "title": "Gemini Pro Polish"
-                },
-                "geminipro_custom": {
-                    "title": "Gemini Pro personnalisé"
                 },
                 "ollama": {
                     "request_path": "Chemin de la demande",
@@ -152,14 +131,8 @@
                     "install_model": "Installer",
                     "install_ollama": "Impossible de se connecter à ollama en local, veuillez d'abord télécharger, installer et démarrer ollama. Si vous utilisez une instance ollama qui n'est pas sur cette machine, veuillez changer l'adresse de demande."
                 },
-                "ollama_summary": {
-                    "title": "Ollama Résumé"
-                },
-                "ollama_custom": {
-                    "title": "Ollama personnalisé"
-                },
-                "ollama_polish": {
-                    "title": "Ollama poli"
+                "ecdict": {
+                    "title": "ECDict (en ligne)"
                 }
             },
             "recognize": {
@@ -246,8 +219,6 @@
                     "title": "Eudic"
                 }
             },
-            "help": "Guide de configuration",
-            "no_need": "Aucune configuration requise",
             "tts": {
                 "lingva_tts": {
                     "title": "Lingva",
@@ -285,7 +256,8 @@
             "fa": "Persan",
             "pl": "Polonais",
             "nn_no": "Norvégien Nynorsk",
-            "uk": "Ukrainien"
+            "uk": "Ukrainien",
+            "he": "Hébreu"
         },
         "common": {
             "plugin": "Extension",
@@ -327,7 +299,7 @@
                 "server_port": "Port d'écoute",
                 "proxy_error": "Veuillez compléter l'hôte et le port",
                 "check_update": "Vérifier les mises à jour",
-                "app_language": "Langue de l'application",
+                "app_language": "Langue d'affichage",
                 "transparent": "Effet de transparence",
                 "title": "Paramètres généraux",
                 "default_font": "Défaut",
@@ -342,7 +314,8 @@
                     "title": "Taille de la police"
                 },
                 "app_font": "Police de caractères",
-                "app_fallback_font": "Police de caractères secondaire"
+                "app_fallback_font": "Police de caractères secondaire",
+                "dev_mode": "Mode développeur"
             },
             "translate": {
                 "bing": "Bing",
@@ -371,7 +344,7 @@
                 "source_language": "Langue d'origine",
                 "pre_state": "Mémoriser la position",
                 "always_on_top": "Toujours au premier plan",
-                "close_on_blur": "Fermer si plus au premier plan",
+                "close_on_blur": "Fermer la fenêtre lorsque le focus est perdu",
                 "hide_source": "Masquer la zone de la langue d'origine",
                 "baidu": "Baidu",
                 "incremental_translate": "Traduction incrémentale",
@@ -411,7 +384,7 @@
             "recognize": {
                 "delete_newline": "Suppression automatique des retours à la ligne",
                 "language": "Langue de reconnaissance",
-                "close_on_blur": "Fermer si plus au premier plan",
+                "close_on_blur": "Fermer la fenêtre lorsque le focus est perdu",
                 "title": "Paramètres de reconnaissance",
                 "label": "Reconnaissance",
                 "hide_window": "Masquer la fenêtre de reconnaissance",
@@ -422,7 +395,7 @@
                 "success": "Le raccourci a bien été enregistré",
                 "is_register": "Le raccourci existe déjà",
                 "label": "Raccourcis",
-                "input_translate": "Traduction de la saisie",
+                "input_translate": "Traduction du texte",
                 "title": "Paramètres des raccourcis",
                 "selection_translate": "Traduction de la sélection",
                 "ocr_recognize": "Reconnaissance de texte",

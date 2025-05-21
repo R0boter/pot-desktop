@@ -34,6 +34,7 @@ export default function General() {
     const [appFallbackFont, setAppFallbackFont] = useConfig('app_fallback_font', 'default');
     const [appFontSize, setAppFontSize] = useConfig('app_font_size', 16);
     const [transparent, setTransparent] = useConfig('transparent', true);
+    const [devMode, setDevMode] = useConfig('dev_mode', false);
     const [trayClickEvent, setTrayClickEvent] = useConfig('tray_click_event', 'config');
     const [proxyEnable, setProxyEnable] = useConfig('proxy_enable', false);
     const [proxyHost, setProxyHost] = useConfig('proxy_host', '');
@@ -63,6 +64,8 @@ export default function General() {
         nn_no: 'Norsk Nynorsk',
         fa: 'فارسی',
         uk: 'Українська',
+        ar: 'العربية',
+        he: 'עִבְרִית',
     };
 
     useEffect(() => {
@@ -117,6 +120,17 @@ export default function General() {
                                 value={serverPort}
                                 labelPlacement='outside-left'
                                 onValueChange={(v) => {
+                                    if (parseInt(v) !== serverPort) {
+                                        if (timer) {
+                                            clearTimeout(timer);
+                                        }
+                                        timer = setTimeout(() => {
+                                            toast.success(t('config.general.server_port_change'), {
+                                                duration: 3000,
+                                                style: toastStyle,
+                                            });
+                                        }, 1000);
+                                    }
                                     if (v === '') {
                                         setServerPort(0);
                                     } else if (parseInt(v) > 65535) {
@@ -126,16 +140,6 @@ export default function General() {
                                     } else {
                                         setServerPort(parseInt(v));
                                     }
-
-                                    if (timer) {
-                                        clearTimeout(timer);
-                                    }
-                                    timer = setTimeout(() => {
-                                        toast.success(t('config.general.server_port_change'), {
-                                            duration: 3000,
-                                            style: toastStyle,
-                                        });
-                                    }, 1000);
                                 }}
                                 className='max-w-[100px]'
                             />
@@ -267,6 +271,18 @@ export default function General() {
                                         startContent={<span className={`fi fi-${LanguageFlag.uk}`} />}
                                     >
                                         Українська
+                                    </DropdownItem>
+                                    <DropdownItem
+                                        key='ar'
+                                        startContent={<span className={`fi fi-${LanguageFlag.ar}`} />}
+                                    >
+                                        العربية
+                                    </DropdownItem>
+                                    <DropdownItem
+                                        key='he'
+                                        startContent={<span className={`fi fi-${LanguageFlag.he}`} />}
+                                    >
+                                        עִבְרִית
                                     </DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
@@ -426,7 +442,7 @@ export default function General() {
                             </Dropdown>
                         )}
                     </div>
-                    <div className={`config-item ${osType === 'Linux' && 'hidden'}`}>
+                    <div className={`config-item ${osType !== 'Windows_NT' && 'hidden'}`}>
                         <h3 className='my-auto'>{t('config.general.tray_click_event')}</h3>
                         {trayClickEvent !== null && (
                             <Dropdown>
@@ -454,12 +470,25 @@ export default function General() {
                     </div>
                     <div className={`config-item ${osType === 'Darwin' && 'hidden'}`}>
                         <h3>{t('config.general.transparent')}</h3>
-                        <Switch
-                            isSelected={transparent}
-                            onValueChange={(v) => {
-                                setTransparent(v);
-                            }}
-                        />
+                        {transparent !== null && (
+                            <Switch
+                                isSelected={transparent}
+                                onValueChange={(v) => {
+                                    setTransparent(v);
+                                }}
+                            />
+                        )}
+                    </div>
+                    <div className='config-item'>
+                        <h3>{t('config.general.dev_mode')}</h3>
+                        {devMode !== null && (
+                            <Switch
+                                isSelected={devMode}
+                                onValueChange={(v) => {
+                                    setDevMode(v);
+                                }}
+                            />
+                        )}
                     </div>
                 </CardBody>
             </Card>

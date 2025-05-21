@@ -1,3 +1,4 @@
+import { INSTANCE_NAME_CONFIG_KEY } from '../../../utils/service_instance';
 import { Input, Button, Textarea } from '@nextui-org/react';
 import { DropdownTrigger } from '@nextui-org/react';
 import { MdDeleteOutline } from 'react-icons/md';
@@ -14,11 +15,16 @@ import { useToastStyle } from '../../../hooks';
 import { translate } from './index';
 import { Language } from './index';
 
+// https://open.bigmodel.cn/dev/api/normal-model/glm-4
+const availableModels = 'glm-4-plus、glm-4-0520、glm-4 、glm-4-air、glm-4-airx、glm-4-long 、 glm-4-flash'.split('、').map(it => it.trim());
+
 export function Config(props) {
-    const { updateServiceList, onClose } = props;
+    const { instanceKey, updateServiceList, onClose } = props;
+    const { t } = useTranslation();
     const [serviceConfig, setServiceConfig] = useConfig(
-        'chatglm',
+        instanceKey,
         {
+            [INSTANCE_NAME_CONFIG_KEY]: t('services.translate.chatglm.title'),
             model: 'chatglm_turbo',
             apiKey: '',
             promptList: [
@@ -37,7 +43,6 @@ export function Config(props) {
     );
     const [isLoading, setIsLoading] = useState(false);
 
-    const { t } = useTranslation();
     const toastStyle = useToastStyle();
 
     return (
@@ -50,7 +55,7 @@ export function Config(props) {
                         () => {
                             setIsLoading(false);
                             setServiceConfig(serviceConfig, true);
-                            updateServiceList('chatglm');
+                            updateServiceList(instanceKey);
                             onClose();
                         },
                         (e) => {
@@ -61,6 +66,25 @@ export function Config(props) {
                 }}
             >
                 <Toaster />
+                <div className='config-item'>
+                    <Input
+                        label={t('services.instance_name')}
+                        labelPlacement='outside-left'
+                        value={serviceConfig[INSTANCE_NAME_CONFIG_KEY]}
+                        variant='bordered'
+                        classNames={{
+                            base: 'justify-between',
+                            label: 'text-[length:--nextui-font-size-medium]',
+                            mainWrapper: 'max-w-[50%]',
+                        }}
+                        onValueChange={(value) => {
+                            setServiceConfig({
+                                ...serviceConfig,
+                                [INSTANCE_NAME_CONFIG_KEY]: value,
+                            });
+                        }}
+                    />
+                </div>
                 <div className='config-item'>
                     <h3 className='my-auto'>{t('services.help')}</h3>
                     <Button
@@ -75,7 +99,7 @@ export function Config(props) {
                     <h3 className='my-auto'>{t('services.translate.chatglm.model')}</h3>
                     <Dropdown>
                         <DropdownTrigger>
-                            <Button variant='bordered'>{t(`services.translate.chatglm.${serviceConfig.model}`)}</Button>
+                            <Button variant='bordered'>{serviceConfig.model}</Button>
                         </DropdownTrigger>
                         <DropdownMenu
                             autoFocus='first'
@@ -87,14 +111,11 @@ export function Config(props) {
                                 });
                             }}
                         >
-                            <DropdownItem key='chatglm_turbo'>
-                                {t(`services.translate.chatglm.chatglm_turbo`)}
-                            </DropdownItem>
-                            <DropdownItem key='chatglm_pro'>{t(`services.translate.chatglm.chatglm_pro`)}</DropdownItem>
-                            <DropdownItem key='chatglm_std'>{t(`services.translate.chatglm.chatglm_std`)}</DropdownItem>
-                            <DropdownItem key='chatglm_lite'>
-                                {t(`services.translate.chatglm.chatglm_lite`)}
-                            </DropdownItem>
+                            {availableModels.map(it => (
+                                <DropdownItem key={it}>
+                                    {it}
+                                </DropdownItem>
+                            ))}
                         </DropdownMenu>
                     </Dropdown>
                 </div>

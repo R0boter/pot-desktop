@@ -38,7 +38,9 @@
             "fa": "Persisch",
             "sv": "Schwedisch",
             "pl": "Polnisch",
-            "nl": "Niederländisch"
+            "nl": "Niederländisch",
+            "uk": "Ukrainisch",
+            "he": "Hebräisch"
         },
         "config": {
             "general": {
@@ -48,7 +50,7 @@
                 "check_update": "Beim Start Updates überprüfen",
                 "server_port": "Überwachungsport",
                 "server_port_change": "Überwachungsport wurde geändert, für Änderungen neu starten",
-                "app_language": "App Sprache",
+                "app_language": "Anzeigesprache",
                 "app_theme": "App Thema",
                 "app_font": "Schriftart",
                 "app_fallback_font": "Fallback-Schriftart",
@@ -224,6 +226,7 @@
         "services": {
             "help": "Konfigurationsanleitung",
             "no_need": "Keine Konfiguration erforderlich",
+            "instance_name": "Konfigurationsname",
             "translate": {
                 "deepl": {
                     "title": "DeepL",
@@ -237,6 +240,9 @@
                 "google": {
                     "title": "Google Übersetzung",
                     "custom_url": "Benutzerdefinierte URL"
+                },
+                "lingva": {
+                    "title": "Lingva"
                 },
                 "bing": {
                     "title": "Bing Übersetzung"
@@ -260,15 +266,6 @@
                     "prompt_description": "Passen Sie das Verhalten von Gemini Pro durch benutzerdefinierte Prompts an. $text $from $to $detect werden durch den zu übersetzenden Text, die Ausgangs- und Zielsprache sowie die erkannte Sprache ersetzt.",
                     "add": "Prompt hinzufügen"
                 },
-                "geminipro_summary": {
-                    "title": "Gemini Pro Zusammenfassung"
-                },
-                "geminipro_polish": {
-                    "title": "Gemini Pro Überarbeitung"
-                },
-                "geminipro_custom": {
-                    "title": "Gemini Pro Benutzerdefiniert"
-                },
                 "chatglm": {
                     "title": "ChatGLM",
                     "model": "Modell",
@@ -279,15 +276,6 @@
                     "api_key": "API-Schlüssel",
                     "prompt_description": "Passen Sie das Verhalten von KI durch benutzerdefinierte Prompts an. $text $from $to $detect werden durch den zu übersetzenden Text, die Ausgangs- und Zielsprache sowie die erkannte Sprache ersetzt.",
                     "add": "Prompt hinzufügen"
-                },
-                "chatglm_summary": {
-                    "title": "ChatGLM Zusammenfassung"
-                },
-                "chatglm_polish": {
-                    "title": "ChatGLM Überarbeitung"
-                },
-                "chatglm_custom": {
-                    "title": "ChatGLM Benutzerdefiniert"
                 },
                 "yandex": {
                     "title": "Yandex"
@@ -350,15 +338,6 @@
                 "caiyun": {
                     "title": "Caiyun",
                     "token": "Token"
-                },
-                "openai_custom": {
-                    "title": "OpenAI Benutzerdefiniert"
-                },
-                "openai_polish": {
-                    "title": "OpenAI Überarbeitung"
-                },
-                "openai_summary": {
-                    "title": "OpenAI Zusammenfassung"
                 }
             },
             "recognize": {

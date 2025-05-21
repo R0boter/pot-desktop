@@ -1,24 +1,22 @@
 import { fetch, Body } from '@tauri-apps/api/http';
-import { store } from '../../../utils/store';
 import { Language } from './info';
+import { defaultRequestArguments } from './Config';
 
-export async function translate(text, from, to, options = {}) {
+export async function translate(text, from, to, options) {
     const { config, setResult, detect } = options;
 
-    let translateConfig = await store.get('openai');
-    if (config !== undefined) {
-        translateConfig = config;
-    }
-    let { service, requestPath, model, apiKey, stream, promptList } = translateConfig;
+    let { service, requestPath, model, apiKey, stream, promptList, requestArguments } = config;
 
     if (!/https?:\/\/.+/.test(requestPath)) {
         requestPath = `https://${requestPath}`;
     }
-    if (requestPath.endsWith('/')) {
-        requestPath = requestPath.slice(0, -1);
-    }
-    if (service === 'openai' && !requestPath.includes('/v1/chat/completions')) {
-        requestPath += '/v1/chat/completions';
+    const apiUrl = new URL(requestPath);
+
+    // in openai like api, /v1 is not required
+    if (service === 'openai' && !apiUrl.pathname.endsWith('/chat/completions')) {
+        // not openai like, populate completion endpoint
+        apiUrl.pathname += apiUrl.pathname.endsWith('/') ? '' : '/';
+        apiUrl.pathname += 'v1/chat/completions';
     }
 
     // 兼容旧版
@@ -54,19 +52,16 @@ export async function translate(text, from, to, options = {}) {
                   'Content-Type': 'application/json',
                   'api-key': apiKey,
               };
-    let body = {
-        temperature: 0,
+    const body = {
+        ...JSON.parse(requestArguments ?? defaultRequestArguments),
         stream: stream,
-        top_p: 1,
-        frequency_penalty: 1,
-        presence_penalty: 1,
         messages: promptList,
     };
     if (service === 'openai') {
         body['model'] = model;
     }
     if (stream) {
-        const res = await window.fetch(requestPath, {
+        const res = await window.fetch(apiUrl.href, {
             method: 'POST',
             headers: headers,
             body: JSON.stringify(body),
@@ -123,7 +118,7 @@ export async function translate(text, from, to, options = {}) {
             throw `Http Request Error\nHttp Status: ${res.status}\n${JSON.stringify(res.data)}`;
         }
     } else {
-        let res = await fetch(requestPath, {
+        let res = await fetch(apiUrl.href, {
             method: 'POST',
             headers: headers,
             body: Body.json(body),

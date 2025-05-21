@@ -39,7 +39,8 @@
             "nl": "Нидерландский",
             "sv": "Шведский",
             "pl": "Польский",
-            "uk": "Украинский"
+            "uk": "Украинский",
+            "he": "Иврит"
         },
         "config": {
             "general": {
@@ -49,7 +50,7 @@
                 "check_update": "Проверка обновлений",
                 "server_port": "Порт прослушивания",
                 "server_port_change": "Порт прослушивания был изменён. Перезапустите приложение, чтобы изменения вступили в силу",
-                "app_language": "Язык приложения",
+                "app_language": "Язык интерфейса",
                 "app_theme": "Тема",
                 "font_size": {
                     "14": "Мелкий (14 пикс.)",
@@ -75,7 +76,7 @@
                     "password": "Пароль",
                     "no_proxy": "Без прокси"
                 },
-                "proxy_change": "Прокси-сервер был изменен. Перезапустите приложение, чтобы изменения вступили в силу",
+                "proxy_change": "Прокси-сервер изменён. Перезапустите приложение, чтобы изменения вступили в силу",
                 "proxy_error": "Пожалуйста, укажите хост и порт",
                 "tray_click_event": "Действие по значку в трее",
                 "event": {
@@ -87,7 +88,8 @@
                 },
                 "default_font": "По умолчанию",
                 "app_font": "Шрифт",
-                "app_fallback_font": "Резервный шрифт"
+                "app_fallback_font": "Резервный шрифт",
+                "dev_mode": "Режим разработчика"
             },
             "translate": {
                 "label": "Перевести",
@@ -146,7 +148,7 @@
                 "label": "Горячие клавиши",
                 "title": "Настройки горячих клавиш",
                 "selection_translate": "Перевод выделенного",
-                "input_translate": "Ввести для перевода",
+                "input_translate": "Перевод текста",
                 "ocr_recognize": "Распознавание текста",
                 "ocr_translate": "Перевод скриншота",
                 "is_register": "Горячая клавиша уже назначена",
@@ -180,7 +182,7 @@
                 "type": "Тип сервиса",
                 "webdav": "WebDav",
                 "local": "Локально",
-                "webdav_url": "Ссылка WebDav",
+                "webdav_url": "WebDav ссылка",
                 "username": "Имя пользователя",
                 "password": "Пароль",
                 "backup": "Бэкап",
@@ -192,7 +194,7 @@
                 "aliyun": "Aliyun Drive",
                 "logout": "Выйти",
                 "login_success": "Вход выполнен",
-                "aliyun_login_first": "Для входа отсканируйте код"
+                "aliyun_login_first": "Для входа отсканируйте код."
             },
             "about": {
                 "label": "О программе",
@@ -225,6 +227,7 @@
         "services": {
             "help": "Руководство по настройке",
             "no_need": "Настройка не требуется",
+            "instance_name": "Имя конфигурации",
             "translate": {
                 "deepl": {
                     "title": "DeepL",
@@ -238,6 +241,9 @@
                 "google": {
                     "title": "Google",
                     "custom_url": "Пользовательский адрес"
+                },
+                "lingva": {
+                    "title": "Lingva"
                 },
                 "bing": {
                     "title": "Bing"
@@ -307,7 +313,7 @@
                     "key": "Key"
                 },
                 "bing_dict": {
-                    "title": "Словарь Bing"
+                    "title": "Bing Dictionary"
                 },
                 "cambridge_dict": {
                     "title": "Кембриджский словарь"
@@ -327,27 +333,6 @@
                     "prompt_description": "Указав Промт, вы можете настроить поведение ИИ. $text $from $to $detect будет заменён текстом для перевода, исходным языком, целевым языком и определённым языком.",
                     "chatglm_turbo": "ChatGLM Turbo"
                 },
-                "chatglm_custom": {
-                    "title": "ChatGLM Custom"
-                },
-                "chatglm_polish": {
-                    "title": "ChatGLM Polish"
-                },
-                "chatglm_summary": {
-                    "title": "ChatGLM Summary"
-                },
-                "openai_custom": {
-                    "title": "OpenAI Custom"
-                },
-                "openai_polish": {
-                    "title": "OpenAI Polish"
-                },
-                "openai_summary": {
-                    "title": "OpenAI Summary"
-                },
-                "geminipro_polish": {
-                    "title": "Gemini Pro Polish"
-                },
                 "geminipro": {
                     "add": "Добавить Промт",
                     "api_key": "Api Key",
@@ -355,12 +340,6 @@
                     "prompt_description": "Указав Промт, вы можете настроить поведение Gemini Pro. $text $from $to $detect будет заменён текстом для перевода, исходным языком, целевым языком и определённым языком.",
                     "title": "Gemini Pro",
                     "request_path": "Путь запроса"
-                },
-                "geminipro_custom": {
-                    "title": "Gemini Pro Custom"
-                },
-                "geminipro_summary": {
-                    "title": "Gemini Pro Summary"
                 },
                 "ollama": {
                     "title": "Ollama",
@@ -376,14 +355,8 @@
                     "stream": "Потоковый режим",
                     "install_ollama_link": "Загрузить Ollama"
                 },
-                "ollama_polish": {
-                    "title": "Ollama Polish"
-                },
-                "ollama_custom": {
-                    "title": "Ollama Custom"
-                },
-                "ollama_summary": {
-                    "title": "Ollama Summary"
+                "ecdict": {
+                    "title": "ECDict (Online)"
                 }
             },
             "recognize": {

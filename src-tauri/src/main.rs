@@ -101,7 +101,7 @@ fn main() {
             }
             match get("proxy_enable") {
                 Some(v) => {
-                    if v.as_bool().unwrap() {
+                    if v.as_bool().unwrap() && get("proxy_host").map_or(false, |host| !host.as_str().unwrap().is_empty()) {
                         let _ = set_proxy();
                     }
                 }
@@ -134,9 +134,10 @@ fn main() {
             get_base64,
             copy_img,
             system_ocr,
-            invoke_plugin,
             set_proxy,
             unset_proxy,
+            run_binary,
+            open_devtools,
             register_shortcut_by_frontend,
             update_tray,
             updater_window,
